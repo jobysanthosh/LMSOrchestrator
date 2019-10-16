@@ -5,6 +5,8 @@ public class BookCopies {
 	private LibraryBranch branch;
 	private Integer noOfCopies;
 	
+	public BookCopies() {}
+
 	public BookCopies(Book book, LibraryBranch branch, Integer noOfCopies) {
 		super();
 		this.book = book;

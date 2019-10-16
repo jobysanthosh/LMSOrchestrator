@@ -4,6 +4,8 @@ public class Author {
 	private Integer authorId;
 	private String authorName;
 	
+	public Author() {}
+
 	public Author(Integer authorId, String authorName) {
 		super();
 		this.authorId = authorId;

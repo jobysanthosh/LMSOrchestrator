@@ -6,6 +6,8 @@ public class Publisher {
 	private String publisherAddress;
 	private String publisherPhone;
 	
+	public Publisher() {}
+
 	public Publisher(Integer publisherId, String publisherName, String publisherAddress, String publisherPhone) {
 		super();
 		this.publisherId = publisherId;
@@ -45,5 +47,4 @@ public class Publisher {
 	public void setPublisherPhone(String publisherPhone) {
 		this.publisherPhone = publisherPhone;
 	}
-
 }
