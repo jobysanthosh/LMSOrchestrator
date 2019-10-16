@@ -1,10 +1,5 @@
 package com.lms.LMSOrchestrator.Main;
 
-import java.util.Optional;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -19,19 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.lms.LMSOrchestrator.POJO.BookBL;
 import com.lms.LMSOrchestrator.POJO.BookCopiesBL;
 import com.lms.LMSOrchestrator.POJO.LibraryBranch;
 
 @RestController
-//@Produces({"application/xml", "application/json"})
-//@Consumes({"application/xml", "application/json"})
 public class Main {
 	String librarianUri = "http://localhost:8080";
 	String borrowerUri = "http://localhost:8090";
@@ -40,28 +29,13 @@ public class Main {
 	@Autowired
 	RestTemplate restTemplate = new RestTemplate();
 
-//	@GetMapping(value = "/branches/{branchId}")
-//	public ResponseEntity<Optional<LibraryBranch>> readAuthorById(@RequestHeader("Accept") String accept,
-//			@PathVariable(value="branchId") Integer branchId)
-//	{
-//		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-//		headers.add("Accept", accept);
-//
-//		return restTemplate.exchange(
-//				librarianUri+"/LMSLibrarian/branches/" + branchId, HttpMethod.GET, new HttpEntity<Object>(headers),
-//				LibraryBranch.class);
-//	}
-
 	@PutMapping
-	(value = "/LMSOrchestrator/LMSLibrarian/branches/{branchId}/name/{name}/address/{address}", consumes = {"application/xml", "application/json"})
+	(value = "/LMSLibrarian/branches/{branchId}/name/{name}/address/{address}", consumes = {"application/xml", "application/json"})
 	public ResponseEntity<LibraryBranch> UpdateBranch(@RequestHeader("Accept") String accept,
-			//@RequestHeader("Content-Type") String content,
 			@RequestBody LibraryBranch branch) throws JsonProcessingException
 	{
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 		headers.add("Accept", accept);
-		//headers.add("Content-Type", content);
-
 		try {
 			return  restTemplate.exchange(
 					librarianUri+"/LMSLibrarian/branches/{branchId}/name/{name}/address/{address}", HttpMethod.PUT, new HttpEntity<LibraryBranch>(branch, headers),
@@ -70,20 +44,19 @@ public class Main {
 		catch(HttpStatusCodeException e) {
 			return new ResponseEntity<LibraryBranch>(e.getStatusCode());
 		}
-
 	}		
 
 	@PutMapping
-	(value = "/LMSOrchestrator/LMSLibrarian/branches/{branchid}/bookid/{bookid}/copy/{copy}",
+	(value = "/LMSLibrarian/branches/{branchId}/bookId/{bookId}/copy/{copy}",
 	consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> AddCopies(@RequestHeader("Accept") String accept,
-			@RequestBody BookCopiesBL bookCopy) //throws JsonProcessingException
+			@RequestBody BookCopiesBL bookCopy) 
 	{
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 		headers.add("Accept", accept);
 
 		try {
-			return restTemplate.exchange(librarianUri+"/LMSLibrarian/branches/{branchId}/bookid/{bookid}/copy/{copy}", HttpMethod.PUT, new HttpEntity<BookCopiesBL>(bookCopy, headers),
+			return restTemplate.exchange(librarianUri+"/LMSLibrarian/branches/{branchId}/bookId/{bookId}/copy/{copy}", HttpMethod.PUT, new HttpEntity<BookCopiesBL>(bookCopy, headers),
 					BookCopiesBL.class, bookCopy.getBranchId(), bookCopy.getBookId(), bookCopy.getNoOfCopies());
 		}
 		catch(HttpStatusCodeException e) {
