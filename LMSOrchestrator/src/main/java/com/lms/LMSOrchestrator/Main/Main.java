@@ -47,7 +47,7 @@ public class Main {
 	}		
 
 	@PutMapping
-	(value = "/LMSLibrarian/branches/{branchId}/bookId/{bookId}/copy/{copy}",
+	(value = "/LMSLibrarian/branches/{branchId}/bookId/{bookId}/copies/{copies}",
 	consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> AddCopies(@RequestHeader("Accept") String accept,
 			@RequestBody BookCopiesBL bookCopy) 
@@ -56,7 +56,7 @@ public class Main {
 		headers.add("Accept", accept);
 
 		try {
-			return restTemplate.exchange(librarianUri+"/LMSLibrarian/branches/{branchId}/bookId/{bookId}/copy/{copy}", HttpMethod.PUT, new HttpEntity<BookCopiesBL>(bookCopy, headers),
+			return restTemplate.exchange(librarianUri+"/LMSLibrarian/branches/{branchId}/bookId/{bookId}/copies/{copies}", HttpMethod.PUT, new HttpEntity<BookCopiesBL>(bookCopy, headers),
 					BookCopiesBL.class, bookCopy.getBranchId(), bookCopy.getBookId(), bookCopy.getNoOfCopies());
 		}
 		catch(HttpStatusCodeException e) {
