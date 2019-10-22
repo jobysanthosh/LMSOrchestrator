@@ -1,62 +1,42 @@
 package com.lms.LMSOrchestrator.Security;
 
-import org.springframework.context.annotation.Bean;
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private UserPrincipalDetailsService userPrincipalDetailsService;
-
-    public SecurityConfiguration(UserPrincipalDetailsService userPrincipalDetailsService) {
-        this.userPrincipalDetailsService = userPrincipalDetailsService;
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter
+{
+	@Autowired
+	DataSource dataSource;
+	
+	@Autowired
+	JdbcUserDetailsManager jdbcudm;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
+    @Autowired
+    public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
+        auth.jdbcAuthentication().dataSource(jdbcudm.getDataSource()).passwordEncoder(passwordEncoder);
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(authenticationProvider());
-    }
-//        inMemoryAuthentication().
-//        withUser("librarian").password(passwordEncoder().encode("librarian123")).
-//        roles("Librarian").authorities("ACCESS_LIBRARIAN", "ACCESS_BORROWER")
-//        .and().
-//        withUser("borrower").password(passwordEncoder().encode("borrower123")).
-//        roles("Borrower").authorities("ACCESS_BORROWER")
-//        .and().
-//        withUser("admin").password(passwordEncoder().encode("admin123")).
-//        roles("Admin").authorities("ACCESS_ADMIN", "ACCESS_LIBRARIAN", "ACCESS_BORROWER");
-//    }
-
-    //We provide request authorization in the below method
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/orchestrator").permitAll()
-        .antMatchers("/orchestrator/librarian/**").hasAuthority("ACCESS_LIBRARIAN")
-        .antMatchers("/orchestrator/borrower/**").hasAnyAuthority("ACCESS_BORROWER")
-        .antMatchers("/orchestrator/admin/**").hasAuthority("ACCESS_ADMIN")
-        .and().httpBasic();
-    }
-  
-    
-    @Bean
-    DaoAuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(this.userPrincipalDetailsService);
-
-        return daoAuthenticationProvider;
-    }
-
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        http.authorizeRequests().antMatchers("/user/**").hasAuthority("ADMIN")
+    		.antMatchers("/user/**").hasAuthority("ADMIN")
+        	.antMatchers("/lms/admin/**").hasAuthority("ADMIN")
+        	.antMatchers("/lms/librarian/**").hasAnyAuthority("LIBRARIAN","ADMIN")
+        	.antMatchers("/lms/borrower/**").hasAnyAuthority("BORROWER","LIBRARIAN","ADMIN")
+        	.and().httpBasic().and().formLogin()
+        	.and().csrf().disable();
     }
 }
