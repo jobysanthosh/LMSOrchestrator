@@ -31,12 +31,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/user/**").hasAuthority("ADMIN")
-    		.antMatchers("/user/**").hasAuthority("ADMIN")
+    	http.csrf().disable().authorizeRequests()
+       // http.authorizeRequests() //.antMatchers("/lms/**").hasRole("ADMIN")
+    		//.antMatchers("/user/**").hasRole("ADMIN")
         	.antMatchers("/lms/admin/**").hasAuthority("ADMIN")
         	.antMatchers("/lms/librarian/**").hasAnyAuthority("LIBRARIAN","ADMIN")
         	.antMatchers("/lms/borrower/**").hasAnyAuthority("BORROWER","LIBRARIAN","ADMIN")
-        	.and().httpBasic().and().formLogin()
-        	.and().csrf().disable();
+        	.and().httpBasic().and().formLogin();
+        	//.and().csrf().disable();
     }
 }

@@ -1,11 +1,20 @@
 package com.lms.LMSOrchestrator.Main;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,6 +42,12 @@ import com.lms.LMSOrchestrator.POJO.*;
 @RequestMapping("/lms")
 public class Main {
 	
+	@Autowired
+    JdbcUserDetailsManager jdbcUserDetailsManager;
+	
+    @Autowired
+    PasswordEncoder passwordEncoder;
+	
 	 @ExceptionHandler({MethodArgumentTypeMismatchException.class, JsonProcessingException.class, NullPointerException.class})
 	 @ResponseStatus(HttpStatus.BAD_REQUEST)
 	 public String handle(Exception e) {
@@ -45,6 +60,60 @@ public class Main {
 
 	@Autowired
 	RestTemplate restTemp;
+	
+/************************Security*****************************/
+    
+    @GetMapping(path = "username/{username}", produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<UserDetails> readUserByName(@PathVariable String username)
+    {
+        // loadUser() never returns null, so 200 constantly
+        UserDetails result = jdbcUserDetailsManager.loadUserByUsername(username);
+        return new ResponseEntity<UserDetails>(result,HttpStatus.OK);
+    }
+    
+    @PostMapping(path = "admin/username/{userName}/password/{password}")
+    public ResponseEntity<UserDetails> createAdmin(@PathVariable("userName") String userName, @PathVariable("password") String password)
+    {
+        ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        authorities.add(new SimpleGrantedAuthority("ADMIN"));
+        UserDetails newUser = new User(
+                userName,
+                passwordEncoder.encode(password), 
+                authorities);
+        
+        jdbcUserDetailsManager.createUser(newUser);
+        return new ResponseEntity<UserDetails>(HttpStatus.NO_CONTENT);
+    }
+    
+    @PostMapping(path = "librarian/username/{userName}/password/{password}")
+    public ResponseEntity<UserDetails> createLibrarian(@PathVariable("userName") String userName, @PathVariable("password") String password)
+    {
+        ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        authorities.add(new SimpleGrantedAuthority("LIBRARIAN"));
+        
+        // Encode the password
+        UserDetails newUser = new User(
+                userName,
+                passwordEncoder.encode(password), 
+                authorities);
+        
+        jdbcUserDetailsManager.createUser(newUser);
+        return new ResponseEntity<UserDetails>(HttpStatus.NO_CONTENT);
+    }
+    
+    @PostMapping(path = "borrower/username/{userName}/password/{password}")
+    public ResponseEntity<UserDetails> createBorrower(@PathVariable("userName") String userName, @PathVariable("password") String password)
+    {
+        ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        authorities.add(new SimpleGrantedAuthority("BORROWER"));
+        UserDetails newUser = new User(
+                userName,
+                passwordEncoder.encode(password), 
+                authorities);
+        
+        jdbcUserDetailsManager.createUser(newUser);
+        return new ResponseEntity<UserDetails>(HttpStatus.NO_CONTENT);
+    }
 
 	/*------------------------------------------------------------------------------------
 	 * 									LIBRARIAN
