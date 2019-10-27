@@ -231,6 +231,28 @@ public class Main {
 	 * --------------------------------------------------------------------------------------
 	 */
 	
+	@GetMapping (value = "/borrower/{cardNo}",
+			produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
+	public ResponseEntity<?> checkCardNo(	@RequestHeader("Accept") String accept,
+			@RequestHeader("Content-Type") String content,
+			@PathVariable Integer cardNo) 
+		{
+			MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+			headers.add("Accept", accept);
+			headers.add("Content-Type", content);
+			
+			HttpEntity<Borrower> request = new HttpEntity<Borrower>(headers);
+			
+			try {
+			return restTemp.exchange(borrowerUri+"/borrower"+cardNo, HttpMethod.GET, request,
+			Borrower.class);
+			}
+			catch(HttpStatusCodeException e) {
+			return new ResponseEntity<Borrower>(e.getStatusCode());
+		}
+	}	
+	
     //Borrower checkout
     @PutMapping (value = "/borrower/checkout",
     		consumes = {"application/xml", "application/json"})
