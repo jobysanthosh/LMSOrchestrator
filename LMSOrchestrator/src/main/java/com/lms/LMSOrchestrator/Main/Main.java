@@ -68,7 +68,7 @@ public class Main {
 	
 /************************Security*****************************/
     
-    @GetMapping(path = "username/{username}", produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(path = "/username/{username}", produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<UserDetails> readUserByName(@PathVariable String username)
     {
         // loadUser() never returns null, so 200 constantly
@@ -76,7 +76,7 @@ public class Main {
         return new ResponseEntity<UserDetails>(result,HttpStatus.OK);
     }
     
-    @PostMapping(path = "admin/username/{userName}/password/{password}")
+    @PostMapping(path = "/admin/username/{userName}/password/{password}")
     public ResponseEntity<UserDetails> createAdmin(@PathVariable("userName") String userName, @PathVariable("password") String password)
     {
         ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
@@ -90,7 +90,7 @@ public class Main {
         return new ResponseEntity<UserDetails>(HttpStatus.NO_CONTENT);
     }
     
-    @PostMapping(path = "librarian/username/{userName}/password/{password}")
+    @PostMapping(path = "/librarian/username/{userName}/password/{password}")
     public ResponseEntity<UserDetails> createLibrarian(@PathVariable("userName") String userName, @PathVariable("password") String password)
     {
         ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
@@ -106,7 +106,7 @@ public class Main {
         return new ResponseEntity<UserDetails>(HttpStatus.NO_CONTENT);
     }
     
-    @PostMapping(path = "borrower/username/{userName}/password/{password}")
+    @PostMapping(path = "/borrower/username/{userName}/password/{password}")
     public ResponseEntity<UserDetails> createBorrower(@PathVariable("userName") String userName, @PathVariable("password") String password)
     {
         ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
@@ -126,7 +126,7 @@ public class Main {
 	 */
 	@GetMapping
 			(value = "/librarian/branches",
-			consumes = {"application/xml", "application/json"}) 
+			produces = {"application/xml", "application/json"}) 
 	public ResponseEntity<String> getAllBranches ( 	@RequestHeader("Accept") String accept,
 													@RequestHeader("Content-Type") String content){
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -149,7 +149,7 @@ public class Main {
 	
 	@GetMapping
 			(value = "/librarian/branches/{branchId}",
-			consumes = {"application/xml", "application/json"}) 
+			produces = {"application/xml", "application/json"}) 
 	public ResponseEntity<LibraryBranch> getABranch ( 	@RequestHeader("Accept") String accept, 
 														@RequestHeader("Content-Type") String content,
 														@PathVariable Integer branchId){
