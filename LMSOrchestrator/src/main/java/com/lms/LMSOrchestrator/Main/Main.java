@@ -61,8 +61,8 @@ public class Main {
 		 return HttpStatus.OK;
 	 }
 	
-	String librarianUri = "librarianBalancer-272234035.us-east-2.elb.amazonaws.com";
-	String borrowerUri = "borrowerLB-601758917.us-east-2.elb.amazonaws.com";
+	String librarianUri = "http://librarianBalancer-272234035.us-east-2.elb.amazonaws.com";
+	String borrowerUri = "http://borrowerLB-601758917.us-east-2.elb.amazonaws.com";
 	String adminUri = "http://adminlb-2135008473.us-east-2.elb.amazonaws.com/admin";
 
 	@Autowired
