@@ -53,10 +53,15 @@ public class Main {
 	 public String handle(Exception e) {
 		 return "Invalid Request";
 	 }
+	 
+	 @GetMapping("/")
+	 public HttpStatus isHealthy() {
+		 return HttpStatus.OK;
+	 }
 	
-	String librarianUri = "http://librarian-service";
-	String borrowerUri = "http://borrower-service";
-	String adminUri = "http://admin-service/admin";
+	String librarianUri = "http://librarianBalancer-272234035.us-east-2.elb.amazonaws.com";
+	String borrowerUri = "http://borrowerLB-180886392.us-east-2.elb.amazonaws.com";
+	String adminUri = "http://adminLB-1733940586.us-east-2.elb.amazonaws.com/admin";
 
 	@Autowired
 	RestTemplate restTemp;
