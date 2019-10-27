@@ -68,7 +68,7 @@ public class Main {
 	
 /************************Security*****************************/
     
-    @GetMapping(path = "/username/{username}", produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(path = "/username/{username}")
     public ResponseEntity<UserDetails> readUserByName(@PathVariable String username)
     {
         // loadUser() never returns null, so 200 constantly
@@ -126,12 +126,13 @@ public class Main {
 	 */
 	@GetMapping
 			(value = "/librarian/branches",
-			produces = {"application/xml", "application/json"}) 
-	public ResponseEntity<String> getAllBranches ( 	@RequestHeader("Accept") String accept,
-													@RequestHeader("Content-Type") String content){
+			produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"}
+			) 
+	public ResponseEntity<String> getAllBranches ( 	@RequestHeader("Accept") String accept
+													){
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 		headers.add("Accept", accept);
-		headers.add("Content-Type", content);
 		
 		 HttpEntity<LibraryBranch> request = new HttpEntity<LibraryBranch>(headers);
 		
@@ -149,7 +150,8 @@ public class Main {
 	
 	@GetMapping
 			(value = "/librarian/branches/{branchId}",
-			produces = {"application/xml", "application/json"}) 
+					produces = {"application/xml", "application/json"},
+					consumes = {"application/xml", "application/json"}) 
 	public ResponseEntity<LibraryBranch> getABranch ( 	@RequestHeader("Accept") String accept, 
 														@RequestHeader("Content-Type") String content,
 														@PathVariable Integer branchId){
@@ -177,7 +179,8 @@ public class Main {
 //	}
 	
 	@PutMapping
-	(value = "/librarian/branches/{branchId}", consumes = {"application/xml", "application/json"})
+	(value = "/librarian/branches/{branchId}", produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<LibraryBranch> UpdateBranch(	@RequestHeader("Accept") String accept,
 														@RequestHeader("Content-Type") String content,
 														@PathVariable Integer branchId,
@@ -202,7 +205,8 @@ public class Main {
 
 	@PutMapping
 	(value = "/librarian/branches/copies",
-	consumes = {"application/xml", "application/json"})
+			produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> AddCopies(	@RequestHeader("Accept") String accept,
 										@RequestHeader("Content-Type") String content,
 										@RequestBody BookCopies bookCopy) 
@@ -284,7 +288,8 @@ public class Main {
 	 */
 	
 	//Create author
-	@PostMapping("/admin/authors")
+	@PostMapping(value = "/admin/authors", produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> insertAuthor(@RequestHeader("Accept") String accept, 
 			@RequestHeader("Content-Type") String contentType, @RequestBody Author author) {
 		
@@ -301,7 +306,8 @@ public class Main {
 	}
 	
 	//Update author
-	@PutMapping("/admin/authors/{authorId}")
+	@PutMapping(value="/admin/authors/{authorId}",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> updateAuthor(@RequestHeader("Accept") String accept, 
 			@RequestHeader("Content-Type") String contentType, @PathVariable Integer authorId, @RequestBody Author author) {
 		
@@ -318,7 +324,8 @@ public class Main {
 	}
 	
 	//Delete author
-	@DeleteMapping("/admin/authors/{authorId}")
+	@DeleteMapping(value="/admin/authors/{authorId}",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> deleteAuthor(@RequestHeader("Accept") String accept, 
 			@RequestHeader("Content-Type") String contentType, @PathVariable Integer authorId) {
 		
@@ -335,7 +342,8 @@ public class Main {
 	}
 	
 	//View one author
-	@GetMapping("/admin/authors/{authorId}")
+	@GetMapping(value="/admin/authors/{authorId}",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> getAuthorById(@RequestHeader("Accept") String accept, 
 			@RequestHeader("Content-Type") String contentType, @PathVariable Integer authorId) {
 		
@@ -352,7 +360,8 @@ public class Main {
 	}
 
 	//View all authors
-	@GetMapping("/admin/authors")
+	@GetMapping(value="/admin/authors",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<Iterable<Author>> getAllAuthors(@RequestHeader("Accept") String accept) {
 		
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -372,7 +381,8 @@ public class Main {
 	 */
 	
 	//Create book
-	@PostMapping("/admin/books")
+	@PostMapping(value="/admin/books",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> insertBook(@RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType,
 			@RequestBody Book book) {
 		
@@ -389,7 +399,8 @@ public class Main {
 	}
 	
 	//Update book
-	@PutMapping("/admin/books/{bookId}")
+	@PutMapping(value="/admin/books/{bookId}",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> updateBook(@RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType,
 			@PathVariable Integer bookId, @RequestBody Book book) {
 		
@@ -406,7 +417,8 @@ public class Main {
 	}
 	
 	//Delete book
-	@DeleteMapping("/admin/books/{bookId}")
+	@DeleteMapping(value="/admin/books/{bookId}",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> deleteBook(@RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType,
 			@PathVariable Integer bookId) {
 		
@@ -423,7 +435,8 @@ public class Main {
 	}
 	
 	//View one book
-	@GetMapping("/admin/books/{bookId}")
+	@GetMapping(value="/admin/books/{bookId}",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> getBookById(@RequestHeader("Accept") String accept, 
 			@RequestHeader("Content-Type") String contentType, @PathVariable Integer bookId) {
 		
@@ -440,7 +453,8 @@ public class Main {
 	}
 	
 	//View all books
-	@GetMapping("/admin/books")
+	@GetMapping(value="/admin/books",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<Iterable<Book>> getAllBooks(@RequestHeader("Accept") String accept) {
 		
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -460,7 +474,8 @@ public class Main {
 	 */
 	
 	//Create borrower
-	@PostMapping("/admin/borrowers")
+	@PostMapping(value="/admin/borrowers",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> insertBorr(@RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType,
 			@RequestBody Borrower borrower) {
 		
@@ -477,7 +492,8 @@ public class Main {
 	}
 	
 	//Update borrower
-	@PutMapping("/admin/borrowers/{cardNo}")
+	@PutMapping(value="/admin/borrowers/{cardNo}",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> updateBorr(@RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType,
 			@PathVariable Integer cardNo, @RequestBody Borrower borrower) {
 		
@@ -494,7 +510,8 @@ public class Main {
 	}
 	
 	//Delete borrower
-	@DeleteMapping("/admin/borrowers/{cardNo}")
+	@DeleteMapping(value="/admin/borrowers/{cardNo}",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> deleteBorr(@RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType,
 			@PathVariable Integer cardNo) {
 		
@@ -511,7 +528,8 @@ public class Main {
 	}
 	
 	//View one borrower
-	@GetMapping("/admin/borrowers/{cardNo}")
+	@GetMapping(value="/admin/borrowers/{cardNo}",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> getBorrById(@RequestHeader("Accept") String accept, 
 			@RequestHeader("Content-Type") String contentType, @PathVariable Integer cardNo) {
 		
@@ -528,7 +546,8 @@ public class Main {
 	}
 	
 	//View all borrower
-	@GetMapping("/admin/borrowers")
+	@GetMapping(value="/admin/borrowers",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<Iterable<Borrower>> getAllBorrs(@RequestHeader("Accept") String accept) {
 		
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -548,7 +567,8 @@ public class Main {
 	 */
 	
 	//Create branch
-	@PostMapping("/admin/branches")
+	@PostMapping(value="/admin/branches",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> insertBranch(@RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType,
 			@RequestBody LibraryBranch branch) {
 		
@@ -565,7 +585,8 @@ public class Main {
 	}
 	
 	//Update branch
-	@PutMapping("/admin/branches/{branchId}")
+	@PutMapping(value="/admin/branches/{branchId}",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> updateBranch(@RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType,
 			@PathVariable Integer branchId, @RequestBody LibraryBranch branch) {
 		
@@ -582,7 +603,8 @@ public class Main {
 	}
 	
 	//Delete branch
-	@DeleteMapping("/admin/branches/{branchId}")
+	@DeleteMapping(value="/admin/branches/{branchId}",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> deleteBranch(@RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType,
 			@PathVariable Integer branchId) {
 		
@@ -599,7 +621,8 @@ public class Main {
 	}
 	
 	//View one branch
-	@GetMapping("/admin/branches/{branchId}")
+	@GetMapping(value="/admin/branches/{branchId}",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> getBranchById(@RequestHeader("Accept") String accept, 
 			@RequestHeader("Content-Type") String contentType, @PathVariable Integer branchId) {
 		
@@ -616,7 +639,8 @@ public class Main {
 	}
 	
 	//View all branches
-	@GetMapping("/admin/branches")
+	@GetMapping(value="/admin/branches",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<Iterable<LibraryBranch>> getAvailableBranch(@RequestHeader("Accept") String accept) {
 		
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -637,7 +661,8 @@ public class Main {
 	 */
 	
 	//Create pub
-	@PostMapping("/admin/publishers")
+	@PostMapping(value="/admin/publishers",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> insertPub(@RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType,
 			@RequestBody Publisher pub) {
 		
@@ -654,7 +679,8 @@ public class Main {
 	}
 	
 	//Update pub
-	@PutMapping("/admin/publishers/{publisherId}")
+	@PutMapping(value="/admin/publishers/{publisherId}",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> updatePub(@RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType,
 			@PathVariable Integer publisherId, @RequestBody Publisher pub) {
 		
@@ -671,7 +697,8 @@ public class Main {
 	}
 	
 	//Delete pub
-	@DeleteMapping(value = "/admin/publishers/{publisherId}")
+	@DeleteMapping(value = "/admin/publishers/{publisherId}",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> deletePub(@RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType,
 			@PathVariable Integer publisherId) {
 		
@@ -688,7 +715,8 @@ public class Main {
 	}
 	
 	//View one publisher
-	@GetMapping("/admin/publishers/{publisherId}")
+	@GetMapping(value="/admin/publishers/{publisherId}",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> getPubById(@RequestHeader("Accept") String accept, 
 			@RequestHeader("Content-Type") String contentType, @PathVariable Integer publisherId) {
 		
@@ -705,7 +733,8 @@ public class Main {
 	}
 	
 	//View publishers
-	@GetMapping("/admin/publishers")
+	@GetMapping(value="/admin/publishers",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<Iterable<Publisher>> getAllPubs(@RequestHeader("Accept") String accept) {
 		
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -726,7 +755,8 @@ public class Main {
 	 */
 	
 	//Override due date
-	@PutMapping("/admin/bookloans/duedate")
+	@PutMapping(value="/admin/bookloans/duedate",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<?> overDueDate(@RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType,
 			@RequestBody BookLoans loans) {
 		
@@ -743,7 +773,8 @@ public class Main {
 	}
 	
 	//View book loans
-	@GetMapping("/admin/bookloans")
+	@GetMapping(value="/admin/bookloans",produces = {"application/xml", "application/json"},
+			consumes = {"application/xml", "application/json"})
 	public ResponseEntity<Iterable<BookLoans>> getBookLoans(@RequestHeader("Accept") String accept) {
 		
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
