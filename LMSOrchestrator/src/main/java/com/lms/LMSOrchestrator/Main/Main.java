@@ -60,7 +60,7 @@ public class Main {
 	 }
 	
 	String librarianUri = "http://librarianBalancer-272234035.us-east-2.elb.amazonaws.com";
-	String borrowerUri = "http://borrower-service";
+	String borrowerUri = "http://borrowerLB-180886392.us-east-2.elb.amazonaws.com";
 	String adminUri = "http://adminLB-1733940586.us-east-2.elb.amazonaws.com/admin";
 
 	@Autowired
